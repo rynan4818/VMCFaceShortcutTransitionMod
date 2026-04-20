@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8B4D313A-0F7A-4B34-A6FD-4D0126DCE9DF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VMCFaceShortcutTransitionMod</RootNamespace>
+    <AssemblyName>VMCFaceShortcutTransitionMod</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <VMCDirectory Condition="'$(VMCDirectory)' == ''">C:\TOOL\VirtualMotionCapture</VMCDirectory>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>$(PkgHarmonyX)\lib\net452\0Harmony.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(VMCDirectory)\VirtualMotionCapture_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(VMCDirectory)\VirtualMotionCapture_Data\Managed\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="UnityEngine">
+      <HintPath>$(VMCDirectory)\VirtualMotionCapture_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(VMCDirectory)\VirtualMotionCapture_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityMemoryMappedFile">
+      <HintPath>$(VMCDirectory)\VirtualMotionCapture_Data\Managed\UnityMemoryMappedFile.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VMCMod">
+      <HintPath>$(VMCDirectory)\VirtualMotionCapture_Data\Managed\VMCMod.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VRM">
+      <HintPath>$(VMCDirectory)\VirtualMotionCapture_Data\Managed\VRM.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Oculus.LipSync">
+      <HintPath>$(VMCDirectory)\VirtualMotionCapture_Data\Managed\Oculus.LipSync.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="HarmonyX" Version="2.16.1" GeneratePathProperty="true" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.6" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Include="MonoMod.Backports" Version="1.1.2" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Include="MonoMod.Core" Version="1.3.4" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Include="MonoMod.ILHelpers" Version="1.1.0" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Include="MonoMod.RuntimeDetour" Version="25.3.4" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Include="MonoMod.Utils" Version="25.0.12" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Include="ILRepack">
+      <Version>2.0.44</Version>
+      <GeneratePathProperty>true</GeneratePathProperty>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Config.cs" />
+    <Compile Include="FaceShortcutTransitionCoordinator.cs" />
+    <Compile Include="FaceShortcutTransitionPatch.cs" />
+    <Compile Include="VMCFaceShortcutTransitionModPlugin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="MergeDependencyDlls" AfterTargets="Build">
+    <PropertyGroup>
+      <_ILRepackExe>$(PkgILRepack)\tools\ILRepack.exe</_ILRepackExe>
+      <_RepackedDll>$(TargetDir)$(TargetName)_all.dll</_RepackedDll>
+      <_ILRepackLog>$(TargetDir)$(AssemblyName).ILRepack.log</_ILRepackLog>
+    </PropertyGroup>
+    <ItemGroup>
+      <_MergeDependency Include="$(PkgHarmonyX)\lib\net452\0Harmony.dll" Condition="Exists('$(PkgHarmonyX)\lib\net452\0Harmony.dll')" />
+      <_MergeDependency Include="$(PkgMono_Cecil)\lib\net40\Mono.Cecil.dll" Condition="Exists('$(PkgMono_Cecil)\lib\net40\Mono.Cecil.dll')" />
+      <_MergeDependency Include="$(PkgMono_Cecil)\lib\net40\Mono.Cecil.Mdb.dll" Condition="Exists('$(PkgMono_Cecil)\lib\net40\Mono.Cecil.Mdb.dll')" />
+      <_MergeDependency Include="$(PkgMono_Cecil)\lib\net40\Mono.Cecil.Pdb.dll" Condition="Exists('$(PkgMono_Cecil)\lib\net40\Mono.Cecil.Pdb.dll')" />
+      <_MergeDependency Include="$(PkgMono_Cecil)\lib\net40\Mono.Cecil.Rocks.dll" Condition="Exists('$(PkgMono_Cecil)\lib\net40\Mono.Cecil.Rocks.dll')" />
+      <_MergeDependency Include="$(PkgMonoMod_Backports)\lib\net452\MonoMod.Backports.dll" Condition="Exists('$(PkgMonoMod_Backports)\lib\net452\MonoMod.Backports.dll')" />
+      <_MergeDependency Include="$(PkgMonoMod_Core)\lib\net452\MonoMod.Core.dll" Condition="Exists('$(PkgMonoMod_Core)\lib\net452\MonoMod.Core.dll')" />
+      <_MergeDependency Include="$(PkgMonoMod_Core)\lib\net452\MonoMod.Iced.dll" Condition="Exists('$(PkgMonoMod_Core)\lib\net452\MonoMod.Iced.dll')" />
+      <_MergeDependency Include="$(PkgMonoMod_ILHelpers)\lib\net452\MonoMod.ILHelpers.dll" Condition="Exists('$(PkgMonoMod_ILHelpers)\lib\net452\MonoMod.ILHelpers.dll')" />
+      <_MergeDependency Include="$(PkgMonoMod_RuntimeDetour)\lib\net452\MonoMod.RuntimeDetour.dll" Condition="Exists('$(PkgMonoMod_RuntimeDetour)\lib\net452\MonoMod.RuntimeDetour.dll')" />
+      <_MergeDependency Include="$(PkgMonoMod_Utils)\lib\net452\MonoMod.Utils.dll" Condition="Exists('$(PkgMonoMod_Utils)\lib\net452\MonoMod.Utils.dll')" />
+      <_MergeDependency Include="$(PkgSystem_ValueTuple)\lib\net47\System.ValueTuple.dll" Condition="Exists('$(PkgSystem_ValueTuple)\lib\net47\System.ValueTuple.dll')" />
+      <_MergeDependencyOutput Include="@(_MergeDependency->'$(TargetDir)%(Filename)%(Extension)')" />
+      <_MergeDependencySidecarOutput Include="@(_MergeDependency->'$(TargetDir)%(Filename).pdb')" />
+      <_MergeDependencySidecarOutput Include="@(_MergeDependency->'$(TargetDir)%(Filename).xml')" />
+    </ItemGroup>
+    <Exec Condition="Exists('$(_ILRepackExe)') and '@(_MergeDependency)' != '' and '$(Configuration)' == 'Release'" Command="&quot;$(_ILRepackExe)&quot; /ndebug /targetplatform:v4 /wildcards /lib:&quot;$(VMCDirectory)\VirtualMotionCapture_Data\Managed&quot; /out:&quot;$(_RepackedDll)&quot; &quot;$(TargetPath)&quot; @(_MergeDependency->'&quot;%(Identity)&quot;', ' ') /log:&quot;$(_ILRepackLog)&quot;" />
+    <Exec Condition="Exists('$(_ILRepackExe)') and '@(_MergeDependency)' != '' and '$(Configuration)' != 'Release'" Command="&quot;$(_ILRepackExe)&quot; /targetplatform:v4 /wildcards /lib:&quot;$(VMCDirectory)\VirtualMotionCapture_Data\Managed&quot; /out:&quot;$(_RepackedDll)&quot; &quot;$(TargetPath)&quot; @(_MergeDependency->'&quot;%(Identity)&quot;', ' ') /log:&quot;$(_ILRepackLog)&quot;" />
+    <Copy Condition="Exists('$(_RepackedDll)')" SourceFiles="$(_RepackedDll)" DestinationFiles="$(TargetPath)" OverwriteReadOnlyFiles="true" />
+    <Delete Files="@(_MergeDependencyOutput);@(_MergeDependencySidecarOutput)" />
+    <Delete Files="$(_RepackedDll)" Condition="Exists('$(_RepackedDll)')" />
+  </Target>
+</Project>
